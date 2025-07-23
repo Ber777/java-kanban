@@ -1,5 +1,8 @@
-public class Main {
+// Добавил пакеты
+import model.*;
+import manager.*;
 
+public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
         TaskManager taskManager = new TaskManager();
@@ -29,15 +32,22 @@ public class Main {
 
         //Изменяем статусы объектов:
         taskManager.update(new Task(task1, "Задача 1", "Первый обычный таск", Status.IN_PROGRESS));
+        System.out.println("Задачи после обновления:");
+        taskManager.printAllTasks();
         taskManager.update(new SubTask(subTask1, "Первый сабтаск первого эпика", "Подзадача 1", Status.IN_PROGRESS, epicNum1));
         taskManager.update(new SubTask(subTask2, "Второй сабтаск второго эпика", "Подзадача 2", Status.DONE,epicNum1));
+        System.out.println("Подзадачи после обновления:");
+        taskManager.printAllSubTasks();
         System.out.println("Эпики:");
         taskManager.printAllEpics();
         taskManager.update(new Epic(epicNum1, "Эпик 1", "Переименованный первый эпик"));
         taskManager.update(new SubTask(subTask3, "Первый сабтаск второго эпика", "Подзадача 1", Status.DONE, epicNum2));
         subTask1 = taskManager.add(new SubTask("Первый сабтаск первого эпика", "", Status.DONE, epicNum1));
-        subTask2 = taskManager.add(new SubTask("Второй сабтаск первого эпика", "", Status.DONE, epicNum1));
-
+        subTask2 = taskManager.add(new SubTask("Второй сабтаск первого эпика", "", Status.IN_PROGRESS, epicNum2));
+        System.out.println("Подзадачи после обновления:");
+        taskManager.printAllSubTasks();
+        System.out.println("Эпики после обновления:");
+        taskManager.printAllEpics();
         // Печать списков после обновления:
         System.out.println("Печать списков после обновления:");
         System.out.println("Задачи:");

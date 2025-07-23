@@ -1,10 +1,11 @@
+package model;
 import java.util.ArrayList;
 
 public class Epic extends Task{
     private long id;
-    ArrayList<SubTask> subTaskArrayList;
+    private ArrayList<Long> subTaskArrayList;  // Исправил, храним теперь только id подзадач
 
-    Epic(String name, String description){
+    public Epic(String name, String description){
         super(0L, name, description);
         subTaskArrayList = new ArrayList<>();
     }
@@ -14,11 +15,11 @@ public class Epic extends Task{
         subTaskArrayList = new ArrayList<>();
     }
 
-    public ArrayList<SubTask> getSubTask() {
+    public ArrayList<Long> getSubTask() {
         return subTaskArrayList;
     }
 
-    public void setSubTask(ArrayList<SubTask> subTaskArrayList) {
+    public void setSubTask(ArrayList<Long> subTaskArrayList) {
         this.subTaskArrayList = subTaskArrayList;
     }
 

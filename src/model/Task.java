@@ -1,17 +1,19 @@
+package model;
+
 public class Task {
     private long id;
     private String name;
     private String description;
     private Status status;
 
-    Task(Long id, String name, String description, Status status){
+    public Task(Long id, String name, String description, Status status){
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
     }
 
-    Task(Long id, String name, String description){
+    public Task(Long id, String name, String description){
         this.id = id;
         this.name = name;
         this.description = description;
