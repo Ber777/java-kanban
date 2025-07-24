@@ -2,7 +2,7 @@ package model;
 import java.util.ArrayList;
 
 public class Epic extends Task{
-    private long id;
+    //private long id;  // излишнее, поле наследуем от Task.
     private ArrayList<Long> subTaskArrayList;  // Исправил, храним теперь только id подзадач
 
     public Epic(String name, String description){
