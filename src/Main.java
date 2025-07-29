@@ -4,7 +4,8 @@ import manager.*;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager taskManager = new TaskManager();
+
+        TaskManager taskManager = Managers.getDefault();
 
         //Создаем две задачи:
         Long task1 = taskManager.add(new Task(1L, "Задача 1", "Первый обычный таск", Status.NEW));
@@ -48,6 +49,10 @@ public class Main {
         taskManager.printAllSubTasksOfEpic(epicNum1);
         System.out.println();
 
+        // Проверяем историю просмотра:
+        System.out.println("История просмотра: ");
+        printAll(taskManager);
+
         // Удаление:
         System.out.println("Удаление:");
         taskManager.deleteTask(task1);
@@ -63,5 +68,37 @@ public class Main {
         System.out.println("Эпики:");
         taskManager.printAllEpics();
         taskManager.printAllSubTasksOfEpic(epicNum1);
+
+        System.out.println("История просмотра: ");
+        printAll(taskManager);
+    }
+
+    // Сценарий для проверки просмотра истории:
+    public static void printAll(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getAllTasks()) {
+            manager.getTask(task.getId());
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Task epic : manager.getAllEpics()) {
+            manager.getEpic(epic.getId());
+            System.out.println(epic);
+
+            for (Task task : manager.getAllSubTasks()) {
+                manager.getSubTask(task.getId());
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getAllSubTasks()) {
+            manager.getSubTask(subtask.getId());
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }

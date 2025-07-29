@@ -20,6 +20,12 @@ public class Task {
         this.status = Status.NEW;  // По умолчанию
     }
 
+    public Task(String name, String description){
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;  // По умолчанию
+    }
+
     public long getId() {
         return id;
     }
@@ -60,5 +66,31 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    // Добавил методы, чтобы задачи с одинаковыми Id были равны (выявил проблему тестами 1-3)
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Task task = (Task) obj;
+        return this.id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 11;
+        if (this.name != null) {
+            hash = hash + this.name.hashCode();
+        }
+        hash = hash * 31;
+        if (this.description != null) {
+            hash = hash + this.description.hashCode();
+        }
+        return hash;
     }
 }
