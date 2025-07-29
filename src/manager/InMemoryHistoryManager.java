@@ -9,16 +9,21 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (historyList.size() == MAX_LIST_SIZE) {
-            historyList.removeFirst();
+        // Добавил проверку объекта на null
+        if (task != null) {
+            if (historyList.size() == MAX_LIST_SIZE) {
+                historyList.removeFirst();
+            }
+            historyList.add(task);
         }
-        historyList.add(task);
     }
 
     //История просмотров задач:
     @Override
     public List<Task> getHistory() {
-        return historyList;
+        // Возвращаем копию истории, чтобы сторонние классы не смогли вносить свои изменения. Спасибо, буду знать!
+        //return historyList;
+        return new ArrayList<>(historyList);
     }
 
 }
