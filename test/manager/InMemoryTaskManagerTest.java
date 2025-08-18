@@ -139,4 +139,24 @@ class InMemoryTaskManagerTest {
         assertEquals(expectedTask.getDescription(), actual.getDescription());
         assertEquals(expectedTask.getStatus(), actual.getStatus());
     }
+
+    // Новые тесты:
+    @Test
+    void shouldReturnEmptyHistoryList() {
+        taskManager.getTask(0L);
+        taskManager.getEpic(0L);
+        taskManager.getSubTask(0L);
+
+        assertTrue(taskManager.getHistory().isEmpty());
+    }
+
+    @Test
+    void shouldReturnListOfHistory() {
+        final Long epicNum1 = taskManager.add(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.getEpic(epicNum1);
+        List<Task> historyList = taskManager.getHistory();
+
+        assertEquals(1, historyList.size());
+    }
+
 }

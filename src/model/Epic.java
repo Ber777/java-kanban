@@ -1,10 +1,10 @@
 package model;
 import java.util.ArrayList;
 
-public class Epic extends Task{
+public class Epic extends Task {
     private ArrayList<Long> subTaskArrayList;
 
-    public Epic(String name, String description){
+    public Epic(String name, String description) {
         super(0L, name, description);
         subTaskArrayList = new ArrayList<>();
     }

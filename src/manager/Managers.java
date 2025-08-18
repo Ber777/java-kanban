@@ -1,9 +1,9 @@
 package manager;
 
 // Утилитарный класс (см. комментарий в InMemoryHistoryManagerTest:
-final public class Managers {
+public final class Managers {
 
-    public static TaskManager getDefault(){
+    public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 

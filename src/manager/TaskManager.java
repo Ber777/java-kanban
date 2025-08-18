@@ -3,6 +3,7 @@ import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public interface TaskManager {
     // 2a: Получение списка всех задач:
     ArrayList<Task> getAllTasks();
