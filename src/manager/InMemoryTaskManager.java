@@ -232,6 +232,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTask(Long id){
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            historyManager.remove(Math.toIntExact(id));  // также удаляем задачу из истории просмотра
             System.out.println("Задача №" + id + " удалена.");
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Задача не была удалена.");
@@ -246,6 +247,7 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<Long> sub1 = epics.get(epicId).getSubTask();
             sub1.remove(id);
             subTasks.remove(id);
+            historyManager.remove(Math.toIntExact(id));  // также удаляем подзадачу из истории просмотра
             updateEpicStatus(epicId);
             System.out.println("Подзадача №" + id + " удалена. Статус эпика №" + epicId + " мог поменяться.");
         } else {
@@ -260,9 +262,11 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(id);
             for (Long idKey : epic.getSubTask()) {
                 subTasks.remove(idKey);
+                historyManager.remove(Math.toIntExact(idKey));  // также удаляем подзадачи эпика из истории просмотра
             }
             epic.clearSubTaskList();
             epics.remove(id);
+            historyManager.remove(Math.toIntExact(id));  // также удаляем эпик из истории просмотра
             System.out.println("Эпик №" + id + " удален. Все его подзадачи были удалены.");
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Эпик не был удален.");

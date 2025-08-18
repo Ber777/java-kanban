@@ -6,6 +6,7 @@ public class Main {
         System.out.println("Поехали!");
 
         TaskManager taskManager = Managers.getDefault();
+        HistoryManager historyManager = Managers.getDefaultHistory();
 
         //Создаем две задачи:
         Long task1 = taskManager.add(new Task(1L, "Задача 1", "Первый обычный таск", Status.NEW));
@@ -20,6 +21,24 @@ public class Main {
         Long epicNum2 = taskManager.add(new Epic("Эпик 2", "Мой второй эпик"));
         Long subTask3 = taskManager.add(new SubTask("Первый сабтаск второго эпика", "", Status.NEW, epicNum2));
 
+        // Для тестирование без сценария:
+        // /*
+        taskManager.getTask(task1);
+        taskManager.getTask(task1);
+        taskManager.getTask(task2);
+        taskManager.getEpic(epicNum1);
+        taskManager.getEpic(epicNum2);
+        taskManager.getEpic(epicNum1);
+        taskManager.getSubTask(subTask2);
+        taskManager.getSubTask(subTask1);
+        taskManager.getSubTask(subTask1);
+        System.out.println("\nИстория просмотра без повторов: ");
+        System.out.println(taskManager.getHistory());
+        // */
+        // Для тестирование без сценария:
+
+        // Для тестирование сценария:
+        // /*
         // Печать списков:
         System.out.println("Задачи:");
         taskManager.printAllTasks();
@@ -30,7 +49,6 @@ public class Main {
         //System.out.println(taskManager.getAllSubTasksOfEpic(epicNum1));
         taskManager.printAllSubTasksOfEpic(epicNum1);
         System.out.println();
-
         //Изменяем статусы объектов:
         System.out.println("Обновление:");
         taskManager.update(new Task(task1, "Задача 1", "Первый обычный таск", Status.IN_PROGRESS));
@@ -68,9 +86,10 @@ public class Main {
         System.out.println("Эпики:");
         taskManager.printAllEpics();
         taskManager.printAllSubTasksOfEpic(epicNum1);
-
-        System.out.println("История просмотра: ");
+        System.out.println("\nИстория просмотра без повторов: ");
         printAll(taskManager);
+        // */
+        // Для тестирование сценария:
     }
 
     // Сценарий для проверки просмотра истории:
