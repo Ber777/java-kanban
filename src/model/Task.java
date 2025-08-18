@@ -6,21 +6,21 @@ public class Task {
     private String description;
     private Status status;
 
-    public Task(Long id, String name, String description, Status status){
+    public Task(Long id, String name, String description, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
     }
 
-    public Task(Long id, String name, String description){
+    public Task(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = Status.NEW;  // По умолчанию
     }
 
-    public Task(String name, String description){
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;  // По умолчанию
