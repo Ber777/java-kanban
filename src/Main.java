@@ -1,12 +1,15 @@
 import model.*;
 import manager.*;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
+        File file = new File("data.csv");
 
-        TaskManager taskManager = Managers.getDefault();
-        HistoryManager historyManager = Managers.getDefaultHistory();
+        //TaskManager taskManager = Managers.getDefault();
+        //HistoryManager historyManager = Managers.getDefaultHistory();
+        FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         //Создаем две задачи:
         Long task1 = taskManager.add(new Task(1L, "Задача 1", "Первый обычный таск", Status.NEW));
@@ -22,7 +25,7 @@ public class Main {
         Long subTask3 = taskManager.add(new SubTask("Первый сабтаск второго эпика", "", Status.NEW, epicNum2));
 
         // Для тестирование без сценария:
-        // /*
+        /*
         taskManager.getTask(task1);
         taskManager.getTask(task1);
         taskManager.getTask(task2);
@@ -34,11 +37,10 @@ public class Main {
         taskManager.getSubTask(subTask1);
         System.out.println("\nИстория просмотра без повторов: ");
         System.out.println(taskManager.getHistory());
-        // */
+        */
         // Для тестирование без сценария:
 
         // Для тестирование сценария:
-        // /*
         // Печать списков:
         System.out.println("Задачи:");
         taskManager.printAllTasks();
@@ -88,8 +90,12 @@ public class Main {
         taskManager.printAllSubTasksOfEpic(epicNum1);
         System.out.println("\nИстория просмотра без повторов: ");
         printAll(taskManager);
-        // */
         // Для тестирование сценария:
+
+        // Загрузка менеджера:
+        System.out.println("Сохраненное состояние менеджера:");
+        FileBackedTaskManager loadFromFile = FileBackedTaskManager.loadFromFile(file);
+        printAll(loadFromFile);
     }
 
     // Сценарий для проверки просмотра истории:

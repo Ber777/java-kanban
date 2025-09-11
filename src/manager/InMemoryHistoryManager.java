@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    //private static final int MAX_LIST_SIZE = 10;  // Задаем константу для списка просмотра
-    //private static final List<Task> historyList = new ArrayList<>(MAX_LIST_SIZE);;  // Сам список для просмотра задач
     private final Map<Integer, Node<Task>> savedTasksMap;
     private Node<Task> head;
     private Node<Task> tail;
@@ -19,28 +17,18 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        // Добавил проверку объекта на null
         if (task != null) {
             linkLast(task);
-            /*if (historyList.size() == MAX_LIST_SIZE) {
-                historyList.removeFirst();
-            }
-            historyList.add(task);*/
         }
     }
 
-    // Реализация нового метода интерфейса HistoryManager:
     @Override
     public void remove(int id) {
         removeNode(savedTasksMap.get(id));
     }
 
-    //История просмотров задач:
     @Override
     public List<Task> getHistory() {
-        // Возвращаем копию истории, чтобы сторонние классы не смогли вносить свои изменения.
-        //return historyList;
-        //return new ArrayList<>(historyList);
         return getTasks();
     }
 

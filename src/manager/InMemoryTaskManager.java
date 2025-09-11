@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Long, Task> tasks;
-    private final HashMap<Long, SubTask> subTasks;
-    private final HashMap<Long, Epic> epics;
-    private Long id;
-    private final InMemoryHistoryManager historyManager;  // Добавили для истории просмотра
+    protected final HashMap<Long, Task> tasks;
+    protected final HashMap<Long, SubTask> subTasks;
+    protected final HashMap<Long, Epic> epics;
+    protected Long id;
+    protected final InMemoryHistoryManager historyManager;
 
     public InMemoryTaskManager() {
         this.id = 1L;
         tasks = new HashMap<>();
         subTasks = new HashMap<>();
         epics = new HashMap<>();
-        this.historyManager = new InMemoryHistoryManager();  // инициализация
+        this.historyManager = new InMemoryHistoryManager();
     }
 
     private Long getUniqueId() {
@@ -110,7 +110,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(id)) {
             Task task = tasks.get(id);
             System.out.println("Задача №" + id + ':' + task);
-            historyManager.add(tasks.get(id));  // Добавляем в список просмотренных
+            historyManager.add(tasks.get(id));
             return task;
         } else {
             System.out.println("Такой задачи не найдено.");
@@ -124,7 +124,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subTasks.containsKey(id)) {
             SubTask subTask = subTasks.get(id);
             System.out.println("Подзадача №" + id + ':' + subTask);
-            historyManager.add(subTasks.get(id));  // Добавляем в список просмотренных
+            historyManager.add(subTasks.get(id));
             return subTask;
         } else {
             System.out.println("Такой подзадачи не найдено.");
@@ -138,7 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
             System.out.println("Эпик №" + id + ':' + epic);
-            historyManager.add(epics.get(id));  // Добавляем в список просмотренных
+            historyManager.add(epics.get(id));
             return epic;
         } else {
             System.out.println("Такого эпика не найдено.");
@@ -154,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
         return task.getId();
     }
 
-    // 2d: Создание подзадачи (влечет за собой добавление в определенный эпик):
+    // 2d: Создание подзадачи:
     @Override
     public Long add(SubTask subTask) {
         Long epicNum = subTask.getEpicIdSub();
@@ -183,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
     // Запись подзадач в эпик:
     public void updateEpicBySubTasks(Epic epic, SubTask subTask) {
         ArrayList<Long> subTasks = new ArrayList<>(epic.getSubTask());
-        subTasks.add(subTask.getId());  // Кладем только id
+        subTasks.add(subTask.getId());
         epic.setSubTask(subTasks);
     }
 
@@ -206,7 +206,7 @@ public class InMemoryTaskManager implements TaskManager {
     // 2e: Обновление подзадачи:
     @Override
     public void update(SubTask subTask) {
-        if (subTasks.containsKey(subTask.getId()) && epics.containsKey(subTask.getEpicIdSub())) {  // Принято, проверки объеденены
+        if (subTasks.containsKey(subTask.getId()) && epics.containsKey(subTask.getEpicIdSub())) {
                 SubTask oldSubTask = subTasks.get(subTask.getId());
                 if (oldSubTask.getId() == subTask.getId()) {
                     oldSubTask.setName(subTask.getName());
@@ -242,7 +242,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTask(Long id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
-            historyManager.remove(Math.toIntExact(id));  // также удаляем задачу из истории просмотра
+            historyManager.remove(Math.toIntExact(id));
             System.out.println("Задача №" + id + " удалена.");
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Задача не была удалена.");
@@ -257,7 +257,7 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<Long> sub1 = epics.get(epicId).getSubTask();
             sub1.remove(id);
             subTasks.remove(id);
-            historyManager.remove(Math.toIntExact(id));  // также удаляем подзадачу из истории просмотра
+            historyManager.remove(Math.toIntExact(id));
             updateEpicStatus(epicId);
             System.out.println("Подзадача №" + id + " удалена. Статус эпика №" + epicId + " мог поменяться.");
         } else {
@@ -272,11 +272,11 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(id);
             for (Long idKey : epic.getSubTask()) {
                 subTasks.remove(idKey);
-                historyManager.remove(Math.toIntExact(idKey));  // также удаляем подзадачи эпика из истории просмотра
+                historyManager.remove(Math.toIntExact(idKey));
             }
             epic.clearSubTaskList();
             epics.remove(id);
-            historyManager.remove(Math.toIntExact(id));  // также удаляем эпик из истории просмотра
+            historyManager.remove(Math.toIntExact(id));
             System.out.println("Эпик №" + id + " удален. Все его подзадачи были удалены.");
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Эпик не был удален.");
