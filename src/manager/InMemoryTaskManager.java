@@ -454,6 +454,6 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 left = index + 1;
             }
-        };
+        }
     }
 }

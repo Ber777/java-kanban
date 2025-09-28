@@ -173,7 +173,7 @@ public class Task {
     }
 
     public String toStringFromFile() {
-        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", id, taskType, name, status, description, ""
-                , startTime, (duration == null ? "null" : duration.toMinutes()));
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", id, taskType, name, status, description, "",
+                startTime, (duration == null ? "null" : duration.toMinutes()));
     }
 }

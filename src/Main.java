@@ -28,35 +28,29 @@ public class Main {
             System.out.println("Создание объектов ...");
 
             Task task1 = new Task("Задача 1", "Первый обычный таск", Status.NEW,
-                    LocalDateTime.of(2025, 9, 26, 17, 0),
-                    Duration.ofMinutes(60));
+                    LocalDateTime.of(2025, 9, 26, 17, 0), Duration.ofMinutes(60));
             manager.add(task1);
 
             Task task2 = new Task("Задача 2", "Второй обычный таск", Status.NEW,
-                    LocalDateTime.of(2025, 9, 26, 19, 0),
-                    Duration.ofMinutes(60));
+                    LocalDateTime.of(2025, 9, 26, 19, 0), Duration.ofMinutes(60));
             manager.add(task2);
 
             Long epicNum1 = manager.add(new Epic("Эпик 1", "Первый эпик"));
             Long epicNum2 = manager.add(new Epic("Эпик 2", "Второй эпик"));
 
             SubTask subTask1 = new SubTask("Первый сабтаск первого эпика", "", Status.NEW, epicNum1,
-                    LocalDateTime.of(2025, 9, 25, 12, 0),
-                    Duration.ofMinutes(20));
+                    LocalDateTime.of(2025, 9, 25, 12, 0), Duration.ofMinutes(20));
             SubTask subTask2 = new SubTask("Второй сабтаск первого эпика", "", Status.NEW, epicNum1,
-                    LocalDateTime.of(2025, 9, 25, 13, 0),
-                    Duration.ofMinutes(20));
+                    LocalDateTime.of(2025, 9, 25, 13, 0), Duration.ofMinutes(20));
             SubTask subTask3 = new SubTask("Первый сабтаск второго эпика", "", Status.NEW, epicNum2,
-                    LocalDateTime.of(2025, 9, 25, 12, 30),
-                    Duration.ofMinutes(20));
+                    LocalDateTime.of(2025, 9, 25, 12, 30), Duration.ofMinutes(20));
             manager.add(subTask1);
             manager.add(subTask2);
             manager.add(subTask3);
         }
 
         Task task2 = new Task("Задача 3", "", Status.NEW,
-                LocalDateTime.of(2025, 9, 25, 9, 30),
-                Duration.ofMinutes(30));
+                LocalDateTime.of(2025, 9, 25, 9, 30), Duration.ofMinutes(30));
         manager.add(task2);
 
         printAll(manager);

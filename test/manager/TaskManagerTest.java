@@ -276,26 +276,26 @@ public class TaskManagerTest {
         manager.deleteAllEpics();
         assertTrue(manager.getPrioritizedTasks().isEmpty());
 
-        Task task1 = new Task("Задача1", "Описание1", Status.NEW
-                , LocalDateTime.of(2025,9,26,12,0), Duration.ofMinutes(15));
+        Task task1 = new Task("Задача1", "Описание1", Status.NEW,
+                LocalDateTime.of(2025,9,26,12,0), Duration.ofMinutes(15));
         Assertions.assertDoesNotThrow( () -> manager.add(task1));
         assertEquals(1, manager.getPrioritizedTasks().size());
         assertEquals(1, manager.getAllTasks().size());
 
-        Task task2Conflict = new Task("Задача2", "Пересечение", Status.NEW
-                , LocalDateTime.of(2025,9,26,12,5), Duration.ofMinutes(15));
+        Task task2Conflict = new Task("Задача2", "Пересечение", Status.NEW,
+                LocalDateTime.of(2025,9,26,12,5), Duration.ofMinutes(15));
         Assertions.assertThrows(TimeException.class, () -> manager.add(task2Conflict));
         assertEquals(1, manager.getPrioritizedTasks().size());
         assertEquals(1, manager.getAllTasks().size());
 
-        Task task3 = new Task("Задача3", "Описание3", Status.NEW
-                , LocalDateTime.of(2025,9,26,12,30), Duration.ofMinutes(30));
+        Task task3 = new Task("Задача3", "Описание3", Status.NEW,
+                LocalDateTime.of(2025,9,26,12,30), Duration.ofMinutes(30));
         Assertions.assertDoesNotThrow( () -> manager.add(task3));
         assertEquals(2, manager.getPrioritizedTasks().size());
         assertEquals(2, manager.getAllTasks().size());
 
-        Task task4 = new Task("Задача4", "Описание4", Status.NEW
-                , LocalDateTime.of(2025,9,26,15,0), Duration.ofMinutes(30));
+        Task task4 = new Task("Задача4", "Описание4", Status.NEW,
+                LocalDateTime.of(2025,9,26,15,0), Duration.ofMinutes(30));
         Assertions.assertDoesNotThrow( () -> manager.add(task4));
         assertEquals(3, manager.getPrioritizedTasks().size());
         assertEquals(3, manager.getAllTasks().size());

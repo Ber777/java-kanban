@@ -27,8 +27,8 @@ public class Epic extends Task {
         this.subTaskArrayList = subTaskArrayList;
     }
 
-    public Epic(long id, String name, String description, ArrayList<Long> subTaskArrayList
-            , LocalDateTime time, Duration duration, LocalDateTime endTime) {
+    public Epic(long id, String name, String description, ArrayList<Long> subTaskArrayList,
+                LocalDateTime time, Duration duration, LocalDateTime endTime) {
         super(id, name, description, time, duration);
         this.taskType = TaskType.EPIC;
         this.subTaskArrayList = subTaskArrayList;
@@ -66,8 +66,8 @@ public class Epic extends Task {
     @Override
     public String toStringFromFile() {
         return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", getId(), getTaskType(), getName(), getStatus(),
-                getDescription(), this.subTaskArrayList, getStartTime()
-                , (getDuration() == null ? "null" : getDuration().toMinutes()), this.endTime);
+                getDescription(), this.subTaskArrayList, getStartTime(),
+                (getDuration() == null ? "null" : getDuration().toMinutes()), this.endTime);
     }
 
     @Override
