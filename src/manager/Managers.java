@@ -1,6 +1,8 @@
 package manager;
 
-// Утилитарный класс (см. комментарий в InMemoryHistoryManagerTest:
+import java.io.File;
+
+// Утилитарный класс
 public final class Managers {
 
     public static TaskManager getDefault() {
@@ -9,5 +11,9 @@ public final class Managers {
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
+    }
+
+    public static TaskManager getFileBackedTaskManager(File file) {
+        return FileBackedTaskManager.loadFromFile(file);
     }
 }

@@ -1,15 +1,14 @@
 package manager;
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
+
+import model.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTaskManagerTest {
+class InMemoryTaskManagerTest extends TaskManagerTest {
     private static TaskManager taskManager;
 
     @BeforeEach

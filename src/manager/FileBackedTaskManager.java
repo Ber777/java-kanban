@@ -2,66 +2,49 @@ package manager;
 
 import model.*;
 import exception.*;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.io.IOException;
-import java.io.FileWriter;
-import java.io.Writer;
+
+import java.util.*;
+import java.util.stream.*;
+import java.io.*;
+import java.nio.file.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
 
     public FileBackedTaskManager(File file) {
-        String fileName = "data.csv";
-        this.file = new File(fileName);
-        if (!file.isFile()) {
-            try {
-                Files.createFile(Paths.get(fileName));
-            } catch (IOException e) {
-                throw new ManagerSaveException("Ошибка создания файла.");
-            }
-        }
+        // Переработал конструктор с учетом комментария к спринту_7:
+        super();
+        this.file = file;
     }
 
     public static String toString(HistoryManager manager) {
-        List<String> strList = new ArrayList<>();
-        for (Task task : manager.getHistory()) {
-            strList.add(String.valueOf(task.getId()));
-        }
+        List<String> strList = manager.getHistory().stream().map(task ->
+                String.valueOf(task.getId())).collect(Collectors.toList());
         return String.join(",", strList);
     }
 
     public void save() {
         try (Writer writer = new FileWriter(file, Charset.forName("windows-1251"))) {
-            writer.write("id,type,name,status,description,epic\n");
-            HashMap<Long, String> allTasks = new HashMap<>();
+            writer.write("id,type,name,status,description,epic,start_time,duration\n");
+            HashMap<Long, String> allTasks;
 
             ArrayList<Task> tasks = super.getAllTasks();
-            for (Task task : tasks) {
-                allTasks.put(task.getId(), task.toStringFromFile());
-            }
+            allTasks = tasks.stream().collect(Collectors.toMap(Task::getId, Task::toStringFromFile,
+                    (a, b) -> b, HashMap::new));
 
             ArrayList<Epic> epics = super.getAllEpics();
-            for (Epic epic : epics) {
-                allTasks.put(epic.getId(), epic.toStringFromFile());
-            }
+            epics.forEach(epic -> allTasks.put(epic.getId(), epic.toStringFromFile()));
 
             ArrayList<SubTask> subtasks = super.getAllSubTasks();
-            for (SubTask subtask : subtasks) {
-                allTasks.put(subtask.getId(), subtask.toStringFromFile());
-            }
+            subtasks.forEach(subtask -> allTasks.put(subtask.getId(), subtask.toStringFromFile()));
 
             for (String value : allTasks.values()) {
                 writer.write(String.format("%s\n", value));
             }
-            writer.write("\n");
-            writer.write(toString(this.historyManager));
+
+            //writer.write("\n"); writer.write(toString(this.historyManager));
 
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка записи файла.");
@@ -69,18 +52,51 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static Task fromString(String value, TaskType taskType) {
-        String[] dataOfTask = value.split(",", 6);
+        ArrayList<Long> subTaskArrayList = new ArrayList<>();
+        String epicId = null; LocalDateTime startDt = null;
+        Duration duration = null; LocalDateTime endDt = null;
+
+        String[] dataOfTask = value.split(",");
         int id = Integer.parseInt(dataOfTask[0]);
         String name = dataOfTask[2];
         Status status = Status.valueOf(dataOfTask[3]);
         String description = dataOfTask[4];
-        String epicId = dataOfTask[5].trim();
+        if (!taskType.equals(TaskType.EPIC)) {
+            epicId = dataOfTask[5].trim();
+            if (!dataOfTask[6].equals("null") && !dataOfTask[7].equals("null")) {
+                startDt = LocalDateTime.parse(dataOfTask[6].trim());
+                duration = Duration.ofMinutes(Long.parseLong(dataOfTask[7].trim()));
+            }
+        } else {
+            // Добавлена функциональность, чтобы исправить проблему "Не восстанавливается связь эпиков с подзадачами" спринт_7
+                int idxSt = 0; int idxEnd = 0;
+                for (int i = 0; i < dataOfTask.length; i++) {
+                    if (dataOfTask[i].contains("[")) {
+                        idxSt = i;
+                    }
+                    if (dataOfTask[i].contains("]")) {
+                        idxEnd = i;
+                    }
+                }
+                // Используем стрим
+                subTaskArrayList = IntStream.rangeClosed(idxSt, idxEnd).mapToObj(i -> dataOfTask[i].trim())
+                        .map(subId -> subId.replaceAll("\\[", ""))
+                        .map(subId -> subId.replaceAll("]", ""))
+                        .map(subId -> Long.parseLong(subId.trim())).collect(Collectors.toCollection(ArrayList::new));
+                if (!dataOfTask[5 + (idxEnd - idxSt) + 1].equals("null")
+                        && !dataOfTask[5 + (idxEnd - idxSt) + 2].equals("null")
+                        && !dataOfTask[5 + (idxEnd - idxSt) + 3].equals("null")) {
+                    startDt = LocalDateTime.parse(dataOfTask[5 + (idxEnd - idxSt) + 1].trim());
+                    duration = Duration.ofMinutes(Integer.parseInt(dataOfTask[5 + (idxEnd - idxSt) + 2].trim()));
+                    endDt = LocalDateTime.parse(dataOfTask[5 + (idxEnd - idxSt) + 3].trim());
+                }
+        }
 
         return switch (taskType) {
-            case TASK -> new Task((long) id, name, description, status);
-            case EPIC -> new Epic((long) id, name, description);
+            case TASK -> new Task((long) id, name, description, status, startDt, duration);
+            case EPIC -> new Epic(id, name, description, subTaskArrayList, startDt, duration, endDt);
             case SUBTASK ->
-                    new SubTask((long) id, name, description, status, Long.valueOf(epicId));
+                    new SubTask((long) id, name, description, status, Long.valueOf(epicId), startDt, duration);
         };
     }
 

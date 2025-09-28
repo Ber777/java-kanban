@@ -1,129 +1,97 @@
 import model.*;
 import manager.*;
+import exception.*;
+
+import java.io.IOException;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        File file = new File("data.csv");
+        String fileName = "data.csv";
+        File file = new File(fileName);
+        if (!file.isFile()) {
+            try {
+                Files.createFile(Paths.get(fileName));
+            } catch (IOException e) {
+                throw new ManagerSaveException("Ошибка создания файла.");
+            }
+        }
 
-        //TaskManager taskManager = Managers.getDefault();
-        //HistoryManager historyManager = Managers.getDefaultHistory();
-        FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
+        // Спринт_8 начало
+        TaskManager manager = new FileBackedTaskManager(file);
+        if (manager.getAllTasks().isEmpty()) {
+            System.out.println("Создание объектов ...");
 
-        //Создаем две задачи:
-        Long task1 = taskManager.add(new Task(1L, "Задача 1", "Первый обычный таск", Status.NEW));
-        Long task2 = taskManager.add(new Task(2L, "Задача 2", "Второй обычный таск", Status.NEW));
+            Task task1 = new Task("Задача 1", "Первый обычный таск", Status.NEW,
+                    LocalDateTime.of(2025, 9, 26, 17, 0),
+                    Duration.ofMinutes(60));
+            manager.add(task1);
 
-        //Создаем эпик с двумя новыми сабтасками:
-        Long epicNum1 = taskManager.add(new Epic("Эпик 1", "Мой первый эпик"));
-        Long subTask1 = taskManager.add(new SubTask("Первый сабтаск первого эпика", "", Status.NEW, epicNum1));
-        Long subTask2 = taskManager.add(new SubTask("Второй сабтаск первого эпика", "", Status.NEW, epicNum1));
+            Task task2 = new Task("Задача 2", "Второй обычный таск", Status.NEW,
+                    LocalDateTime.of(2025, 9, 26, 19, 0),
+                    Duration.ofMinutes(60));
+            manager.add(task2);
 
-        //Создаем второй эпик с одной сабтаской:
-        Long epicNum2 = taskManager.add(new Epic("Эпик 2", "Мой второй эпик"));
-        Long subTask3 = taskManager.add(new SubTask("Первый сабтаск второго эпика", "", Status.NEW, epicNum2));
+            Long epicNum1 = manager.add(new Epic("Эпик 1", "Первый эпик"));
+            Long epicNum2 = manager.add(new Epic("Эпик 2", "Второй эпик"));
 
-        // Для тестирование без сценария:
-        /*
-        taskManager.getTask(task1);
-        taskManager.getTask(task1);
-        taskManager.getTask(task2);
-        taskManager.getEpic(epicNum1);
-        taskManager.getEpic(epicNum2);
-        taskManager.getEpic(epicNum1);
-        taskManager.getSubTask(subTask2);
-        taskManager.getSubTask(subTask1);
-        taskManager.getSubTask(subTask1);
-        System.out.println("\nИстория просмотра без повторов: ");
-        System.out.println(taskManager.getHistory());
-        */
-        // Для тестирование без сценария:
+            SubTask subTask1 = new SubTask("Первый сабтаск первого эпика", "", Status.NEW, epicNum1,
+                    LocalDateTime.of(2025, 9, 25, 12, 0),
+                    Duration.ofMinutes(20));
+            SubTask subTask2 = new SubTask("Второй сабтаск первого эпика", "", Status.NEW, epicNum1,
+                    LocalDateTime.of(2025, 9, 25, 13, 0),
+                    Duration.ofMinutes(20));
+            SubTask subTask3 = new SubTask("Первый сабтаск второго эпика", "", Status.NEW, epicNum2,
+                    LocalDateTime.of(2025, 9, 25, 12, 30),
+                    Duration.ofMinutes(20));
+            manager.add(subTask1);
+            manager.add(subTask2);
+            manager.add(subTask3);
+        }
 
-        // Для тестирование сценария:
-        // Печать списков:
-        System.out.println("Задачи:");
-        taskManager.printAllTasks();
-        System.out.println("Подзадачи:");
-        taskManager.printAllSubTasks();
-        System.out.println("Эпики:");
-        taskManager.printAllEpics();
-        //System.out.println(taskManager.getAllSubTasksOfEpic(epicNum1));
-        taskManager.printAllSubTasksOfEpic(epicNum1);
-        System.out.println();
-        //Изменяем статусы объектов:
-        System.out.println("Обновление:");
-        taskManager.update(new Task(task1, "Задача 1", "Первый обычный таск", Status.IN_PROGRESS));
-        System.out.println("Задачи после обновления:");
-        taskManager.printAllTasks();
-        taskManager.update(new SubTask(subTask1, "Первый сабтаск первого эпика", "Подзадача 1", Status.IN_PROGRESS, epicNum1));
-        taskManager.update(new SubTask(subTask2, "Второй сабтаск первого эпика", "Подзадача 2", Status.DONE,epicNum1));
-        taskManager.update(new SubTask(subTask3, "Первый сабтаск второго эпика", "Подзадача 1", Status.DONE,epicNum2));
-        System.out.println("Подзадачи после обновления:");
-        taskManager.printAllSubTasks();
-        System.out.println("Эпики после обновления подзадач:");
-        taskManager.printAllEpics();
-        taskManager.update(new Epic(epicNum1, "Эпик 1", "Переименованный первый эпик"));
-        System.out.println("Эпики после обновления:");
-        taskManager.printAllEpics();
-        taskManager.printAllSubTasksOfEpic(epicNum1);
-        System.out.println();
+        Task task2 = new Task("Задача 3", "", Status.NEW,
+                LocalDateTime.of(2025, 9, 25, 9, 30),
+                Duration.ofMinutes(30));
+        manager.add(task2);
 
-        // Проверяем историю просмотра:
-        System.out.println("История просмотра: ");
-        printAll(taskManager);
+        printAll(manager);
+        System.out.println("\nЗадачи по приоритету:");
+        manager.printPrioritization();
 
-        // Удаление:
-        System.out.println("Удаление:");
-        taskManager.deleteTask(task1);
-        taskManager.deleteSubTask(subTask1);
-        taskManager.deleteEpic(epicNum2);
-
-        // Печать списков после удаления:
-        System.out.println("Печать списков после удаления:");
-        System.out.println("Задачи:");
-        taskManager.printAllTasks();
-        System.out.println("Подзадачи:");
-        taskManager.printAllSubTasks();
-        System.out.println("Эпики:");
-        taskManager.printAllEpics();
-        taskManager.printAllSubTasksOfEpic(epicNum1);
-        System.out.println("\nИстория просмотра без повторов: ");
-        printAll(taskManager);
-        // Для тестирование сценария:
-
-        // Загрузка менеджера:
-        System.out.println("Сохраненное состояние менеджера:");
+        System.out.println("\nЗагрузка из файла:");
         FileBackedTaskManager loadFromFile = FileBackedTaskManager.loadFromFile(file);
         printAll(loadFromFile);
+        // Спринт_8 конец
     }
 
     // Сценарий для проверки просмотра истории:
     public static void printAll(TaskManager manager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getAllTasks()) {
+        manager.getAllTasks().forEach(task -> {
             manager.getTask(task.getId());
             System.out.println(task);
-        }
+        });
         System.out.println("Эпики:");
-        for (Task epic : manager.getAllEpics()) {
+        manager.getAllEpics().forEach(epic -> {
             manager.getEpic(epic.getId());
             System.out.println(epic);
-
-            for (Task task : manager.getAllSubTasks()) {
+            manager.getAllSubTasks().forEach(task -> {
                 manager.getSubTask(task.getId());
                 System.out.println("--> " + task);
-            }
-        }
+            });
+        });
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getAllSubTasks()) {
+        manager.getAllSubTasks().forEach(subtask -> {
             manager.getSubTask(subtask.getId());
             System.out.println(subtask);
-        }
+        });
 
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
+        manager.getHistory().forEach(System.out::println);
     }
 }

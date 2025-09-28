@@ -1,10 +1,8 @@
 package manager;
+
 import model.Task;
 import model.Node;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node<Task>> savedTasksMap;

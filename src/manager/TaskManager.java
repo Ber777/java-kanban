@@ -76,4 +76,9 @@ public interface TaskManager {
 
     // История просмотров задач:
     List<Task> getHistory();
+
+    // Спринт_8
+    List<Task> getPrioritizedTasks();
+
+    void printPrioritization();
 }
