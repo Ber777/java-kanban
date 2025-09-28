@@ -3,6 +3,7 @@ import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public interface TaskManager {
     // 2a: Получение списка всех задач:
     ArrayList<Task> getAllTasks();
@@ -75,4 +76,9 @@ public interface TaskManager {
 
     // История просмотров задач:
     List<Task> getHistory();
+
+    // Спринт_8
+    List<Task> getPrioritizedTasks();
+
+    void printPrioritization();
 }

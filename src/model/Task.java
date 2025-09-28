@@ -1,29 +1,76 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
     private long id;
     private String name;
     private String description;
     private Status status;
+    protected TaskType taskType;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-    public Task(Long id, String name, String description, Status status){
+    public Task(Long id, String name, String description, Status status, LocalDateTime time, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
+        this.taskType = TaskType.TASK;
+        this.startTime = time;
+        this.duration = duration;
     }
 
-    public Task(Long id, String name, String description){
+    public Task(String name, String description, Status status, LocalDateTime time, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.taskType = TaskType.TASK;
+        this.startTime = time;
+        this.duration = duration;
+    }
+
+    public Task(Long id, String name, String description, LocalDateTime time, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.status = Status.NEW;  // По умолчанию
+        this.status = Status.NEW;
+        this.taskType = TaskType.TASK;
+        this.startTime = time;
+        this.duration = duration;
     }
 
-    public Task(String name, String description){
+    public Task(String name, String description, LocalDateTime time, Duration duration) {
         this.name = name;
         this.description = description;
-        this.status = Status.NEW;  // По умолчанию
+        this.status = Status.NEW;
+        this.taskType = TaskType.TASK;
+        this.startTime = time;
+        this.duration = duration;
+    }
+
+    public Task(Long id, String name, String description, Status status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.taskType = TaskType.TASK;
+    }
+
+    public Task(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+        this.taskType = TaskType.TASK;
+    }
+
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+        this.taskType = TaskType.TASK;
     }
 
     public long getId() {
@@ -58,17 +105,48 @@ public class Task {
         this.status = status;
     }
 
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null)
+            return null;
+        return startTime.plus(duration);
+    }
+
     @Override
     public String toString() {
         return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", status=" + status +
+                ", status=" + status + '\'' +
+                ", startTime=" + (startTime == null ? "null" : startTime) + '\'' +
+                ", duration=" + (duration == null ? "null" : duration.toMinutes()) +
                 '}';
     }
 
-    // Добавил методы, чтобы задачи с одинаковыми Id были равны (выявил проблему тестами 1-3)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -92,5 +170,10 @@ public class Task {
             hash = hash + this.description.hashCode();
         }
         return hash;
+    }
+
+    public String toStringFromFile() {
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", id, taskType, name, status, description, "",
+                startTime, (duration == null ? "null" : duration.toMinutes()));
     }
 }

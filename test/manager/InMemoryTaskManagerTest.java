@@ -1,15 +1,14 @@
 package manager;
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
+
+import model.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTaskManagerTest {
+class InMemoryTaskManagerTest extends TaskManagerTest {
     private static TaskManager taskManager;
 
     @BeforeEach
@@ -139,4 +138,24 @@ class InMemoryTaskManagerTest {
         assertEquals(expectedTask.getDescription(), actual.getDescription());
         assertEquals(expectedTask.getStatus(), actual.getStatus());
     }
+
+    // Новые тесты:
+    @Test
+    void shouldReturnEmptyHistoryList() {
+        taskManager.getTask(0L);
+        taskManager.getEpic(0L);
+        taskManager.getSubTask(0L);
+
+        assertTrue(taskManager.getHistory().isEmpty());
+    }
+
+    @Test
+    void shouldReturnListOfHistory() {
+        final Long epicNum1 = taskManager.add(new Epic("Эпик 1", "Описание эпика 1"));
+        taskManager.getEpic(epicNum1);
+        List<Task> historyList = taskManager.getHistory();
+
+        assertEquals(1, historyList.size());
+    }
+
 }
