@@ -30,7 +30,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write("id,type,name,status,description,epic,start_time,duration\n");
             HashMap<Long, String> allTasks;
 
-            ArrayList<Task> tasks = super.getAllTasks();
+            List<Task> tasks = super.getAllTasks();
             allTasks = tasks.stream().collect(Collectors.toMap(Task::getId, Task::toStringFromFile,
                     (a, b) -> b, HashMap::new));
 
@@ -169,9 +169,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteTask(Long id) {
+    public boolean deleteTask(Long id) {
         super.deleteTask(id);
         save();
+        return true;
     }
 
     @Override
@@ -201,9 +202,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteEpic(Long id) {
+    public boolean deleteEpic(Long id) {
         super.deleteEpic(id);
         save();
+        return true;
     }
 
     @Override
@@ -233,8 +235,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteSubTask(Long id) {
+    public boolean deleteSubTask(Long id) {
         super.deleteSubTask(id);
         save();
+        return true;
     }
 }

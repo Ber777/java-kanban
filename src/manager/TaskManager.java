@@ -60,13 +60,13 @@ public interface TaskManager {
     void update(Epic epic);
 
     // 2f: Удаление по идентификатору:
-    void deleteTask(Long id);
+    boolean deleteTask(Long id);
 
     // 2f: Удаление подзадачи по идентификатору:
-    void deleteSubTask(Long id);
+    boolean deleteSubTask(Long id);
 
     // 2f: Удаление эпика по идентификатору:
-    void deleteEpic(Long id);
+    boolean deleteEpic(Long id);
 
     // 3a: Получение списка подзадач эпика:
     ArrayList<Long> getAllSubTasksOfEpic(Long id);

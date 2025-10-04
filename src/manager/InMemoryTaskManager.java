@@ -270,20 +270,22 @@ public class InMemoryTaskManager implements TaskManager {
 
     // 2f: Удаление по идентификатору:
     @Override
-    public void deleteTask(Long id) {
+    public boolean deleteTask(Long id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
             prioritizedTasks.remove(tasks.get(id));
             historyManager.remove(Math.toIntExact(id));
             System.out.println("Задача №" + id + " удалена.");
+            return true;
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Задача не была удалена.");
+            return false;
         }
     }
 
     // 2f: Удаление подзадачи по идентификатору:
     @Override
-    public void deleteSubTask(Long id) {
+    public boolean deleteSubTask(Long id) {
         if (subTasks.containsKey(id)) {
             Long epicId = subTasks.get(id).getEpicIdSub();
             SubTask subTask = subTasks.get(id);
@@ -296,14 +298,16 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(subTask.getEpicIdSub());
             updateEpicTime(epic);
             System.out.println("Подзадача №" + id + " удалена. Статус эпика №" + epicId + " мог поменяться.");
+            return true;
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Подзадача не была удалена.");
+            return false;
         }
     }
 
     // 2f: Удаление эпика по идентификатору:
     @Override
-    public void deleteEpic(Long id) {
+    public boolean deleteEpic(Long id) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
             epic.getSubTask().forEach(idKey -> {
@@ -317,8 +321,10 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.removeIf(task -> epic.getSubTask().contains(task.getId()));
             subTasks.values().removeIf(c -> c.getEpicIdSub() == id);
             System.out.println("Эпик №" + id + " удален. Все его подзадачи были удалены.");
+            return true;
         } else {
             System.out.println("Идентификатор " + id + " отсутствует в системе. Эпик не был удален.");
+            return false;
         }
     }
 

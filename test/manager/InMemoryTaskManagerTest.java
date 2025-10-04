@@ -16,6 +16,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         taskManager = Managers.getDefault();
     }
 
+
     // Тест6: InMemoryTaskManager добавляет задачи и может найти их по id:
     @Test
     void shouldAddNewTask() {
@@ -60,6 +61,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
         assertEquals(3, subtasks.size(), "Неверное количество подзадач.");
         assertEquals(subTask1, subtasks.getFirst(), "Подзадачи не совпадают.");
     }
+
 
     // Тест8: Обновленная задача имеет тот же номер:
     @Test

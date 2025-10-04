@@ -2,6 +2,7 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Task {
     private long id;
@@ -11,6 +12,8 @@ public class Task {
     protected TaskType taskType;
     protected Duration duration;
     protected LocalDateTime startTime;
+
+    static DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public Task(Long id, String name, String description, Status status, LocalDateTime time, Duration duration) {
         this.id = id;

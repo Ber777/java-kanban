@@ -8,20 +8,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 
-// Проверка загрузки по комментарию спринта_7:
-// Привет, спасибо, что принял проект, я смог двигаться дальше!
-// Сейчас доработал код (уже в 8ом спиринте) по твоим комментариям из спринта_7 к пул-реквесту, но немного не понял следующего:
-// 1) Не загружаются таски - вроде задачи загружаются;
-// 2) Не восстанавливается связь эпиков с подзадачами - это доработал, было интересно, но после доработки уже посмотрел,
-// что в ТЗ не требовалось выводить связь эпиков с подзадачами:
-// "Тогда файл с сохранёнными данными будет выглядеть так:"
-      // id,type,name,status,description,epic
-      // 1,TASK,Task1,NEW,Description task1,
-      // 2,EPIC,Epic2,DONE,Description epic2,
-      // 3,SUBTASK,Sub Task2,DONE,Description sub task3,2
-// 3) Не обновляется масимальный идентификатор из загруженого файла - не увидел такого пункта к ТЗ Спринта_7,
-// не совсем понимаю, что необходимо сделать, может, это в сдед. спринтах потребуется доработать и поконкретнее опишут?
-
 class FileBackedTaskManagerTest extends TaskManagerTest {
     private File tempFile;
     private FileBackedTaskManager manager;
@@ -46,6 +32,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
         assertTrue(loadedManager.getAllSubTasks().isEmpty());
         assertTrue(loadedManager.getHistory().isEmpty());
     }
+
 
     @Test
     void testSaveAndLoadTasks() {
