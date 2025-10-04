@@ -3,6 +3,7 @@ import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public interface TaskManager {
     // 2a: Получение списка всех задач:
     ArrayList<Task> getAllTasks();
@@ -59,13 +60,13 @@ public interface TaskManager {
     void update(Epic epic);
 
     // 2f: Удаление по идентификатору:
-    void deleteTask(Long id);
+    boolean deleteTask(Long id);
 
     // 2f: Удаление подзадачи по идентификатору:
-    void deleteSubTask(Long id);
+    boolean deleteSubTask(Long id);
 
     // 2f: Удаление эпика по идентификатору:
-    void deleteEpic(Long id);
+    boolean deleteEpic(Long id);
 
     // 3a: Получение списка подзадач эпика:
     ArrayList<Long> getAllSubTasksOfEpic(Long id);
@@ -75,4 +76,9 @@ public interface TaskManager {
 
     // История просмотров задач:
     List<Task> getHistory();
+
+    // Спринт_8
+    List<Task> getPrioritizedTasks();
+
+    void printPrioritization();
 }
